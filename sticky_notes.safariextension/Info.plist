@@ -42,13 +42,11 @@
 	<dict>
 		<key>Scripts</key>
 		<dict>
-			<key>End</key>
-			<array>
-				<string>safari/injected.js</string>
-			</array>
 			<key>Start</key>
 			<array>
 				<string>shared/lib/jquery-1.11.1.js</string>
+				<string>safari/safari_browser_adapter.js</string>
+				<string>shared/js/injected.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>

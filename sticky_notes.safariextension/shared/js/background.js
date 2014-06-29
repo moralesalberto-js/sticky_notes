@@ -11,19 +11,17 @@ var backgroundObject = function () {
     var _visible = false;
 
     var _hideInAllTabs = function () {
-      for(var i = 0; i < safari.application.browserWindows.length; i++) {
-        var currentWindow = safari.application.browserWindows[i];
-        for(var j=0; j < currentWindow.tabs.length; j++) {
-          var tab = currentWindow.tabs[j];
-          tab.page.dispatchMessage('hideStickyPad', 'hideStickyPad');
-        }
+      var _tabs = browser.getAllTabs();
+      for(var i = 0; i < _tabs.length; i++) {
+        var _tab = _tabs[i];
+        browser.sendMessageToTab(_tab, 'hideStickyPad', 'hideStickyPad');
       }
     };
 
 
     var _showInActiveTab = function () {
-      var theActiveWindow = safari.application.activeBrowserWindow;
-      theActiveWindow.activeTab.page.dispatchMessage('showStickyPad', 'showStickyPad');
+      var _tab = browser.getActiveTab();
+      browser.sendMessageToTab(_tab, 'showStickyPad', 'showStickyPad');
     };
 
 
@@ -42,15 +40,15 @@ var backgroundObject = function () {
 
 
 
-  var _handleCommand = function (event) {
-    if(event.command === 'toggleStickyPadVisibility') {
+  var _handleCommand = function (command_name) {
+    if(command_name === 'toggleStickyPadVisibility') {
       _stickyPad.toggleVisibility();
     }
   };
 
 
   var _setupCommandsListener = function() {
-    safari.application.addEventListener("command", _handleCommand, false);
+    browser.addBackgroundCommandListener(_handleCommand);
   };
 
 
@@ -66,6 +64,7 @@ var backgroundObject = function () {
 
 // using require.js so here we return the background object
 // using the define syntax stating the dependencies for this 'backround.js' script
-define(['jquery'], function(jquery) {
+define(['jquery', 'browser'], function(jquery, browser) {
   return backgroundObject;
 });
+

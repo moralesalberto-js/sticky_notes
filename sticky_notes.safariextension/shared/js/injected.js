@@ -34,9 +34,11 @@ if (window.top === window) {
 
   var messaging = function () {
 
-    var _respondToMessage = function (theMessageEvent) {
-      var message_name = theMessageEvent.name;
-      var message_data = theMessageEvent.message;
+    // This is the shared interface to receive a message, it has two variables
+    // the message name, and the message_data
+    // In the browser adapter you set the translation
+    var _respondToMessage = function (message_name, message_data) {
+
       if (message_name === 'showStickyPad') {
         stickyPad.show();
       }
@@ -49,7 +51,7 @@ if (window.top === window) {
 
     var self = {
       setupListener: function () {
-        safari.self.addEventListener("message", _respondToMessage, false);
+        browser.addInjectedMessageListener(_respondToMessage);
       }
     };
 

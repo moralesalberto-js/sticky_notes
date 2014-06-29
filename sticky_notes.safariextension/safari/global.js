@@ -12,7 +12,8 @@ require.config({
     'underscore': '../shared/lib/underscore',
     'underscore-string': '../shared/lib/underscore.string',
     'haml': '../shared/lib/haml',
-    'background': 'background'
+    'background': '../shared/js/background',
+    'browser' : 'safari_browser_adapter'
   },
 
   shim: {
@@ -37,10 +38,9 @@ require.config({
 
 // Here you tell require.js the order the modules are loaded
 // and which variable points to the module
-define(['jquery', 'background', 'haml'], function ($, background, haml) {
+// browser will be browser specific and will point to the browser specific adapter
+define(['jquery', 'background'], function ($, background) {
 
-  // Here we finally run the code for main.js
   background.setupListeners();
-
 
 });
