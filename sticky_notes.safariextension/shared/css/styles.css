@@ -1,0 +1,7 @@
+#sticky_pad {
+  background-color: yellow;
+  height: 300px;
+  width: 300px;
+  border: 1px solid orange;
+  display: none;
+}

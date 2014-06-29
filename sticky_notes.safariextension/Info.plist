@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>Alberto Morales</string>
+	<key>Builder Version</key>
+	<string>9537.76.4</string>
+	<key>CFBundleDisplayName</key>
+	<string>StickyNotes</string>
+	<key>CFBundleIdentifier</key>
+	<string>us.amorales.sticky-notes</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Global Page</key>
+		<string>safari/global.html</string>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Command</key>
+				<string>toggleStickyPadVisibility</string>
+				<key>Identifier</key>
+				<string>sticky_notes</string>
+				<key>Image</key>
+				<string>safari/icon.png</string>
+				<key>Label</key>
+				<string>sticky_notes</string>
+				<key>Palette Label</key>
+				<string>sticky_notes</string>
+				<key>Tool Tip</key>
+				<string>sticky notes</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>End</key>
+			<array>
+				<string>safari/injected.js</string>
+			</array>
+			<key>Start</key>
+			<array>
+				<string>shared/lib/jquery-1.11.1.js</string>
+			</array>
+		</dict>
+		<key>Stylesheets</key>
+		<array>
+			<string>shared/css/styles.css</string>
+		</array>
+	</dict>
+	<key>Description</key>
+	<string>sticky notepad for your browser</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Website</key>
+	<string>http://amorales.us</string>
+</dict>
+</plist>
