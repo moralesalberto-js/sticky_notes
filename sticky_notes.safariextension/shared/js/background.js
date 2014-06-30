@@ -5,11 +5,9 @@
 var background = function () {
 
   // This is the object that represents the stickyPad in the backround process
-  // It will send messages to the active tab to update the display in the stickyPad
   var _stickyPad = function () {
 
-    var _visible = false;
-
+    // send a message to all the windows and tabs to close the sticky notepad
     var _hideInAllTabs = function () {
       var _tabs = browser.getAllTabs();
       for(var i = 0; i < _tabs.length; i++) {
@@ -18,14 +16,7 @@ var background = function () {
       }
     };
 
-    var _getHtmlForView = function () {
-      var _templateUrl = browser.getLocalUrlFor("shared/templates/sticky_pad.html.haml");
-      var _template = haml.compileHaml( { sourceUrl: _templateUrl } );
-      var _compiledHtml = _template({name: 'Alberto Morales'});
-      return _compiledHtml;
-    };
-
-
+    // send a message to show the sticky pad with the html for the view
     var _showInActiveTab = function () {
       var _tab = browser.getActiveTab();
       var _data = { html: _getHtmlForView() };
@@ -35,13 +26,21 @@ var background = function () {
     };
 
 
+    // this function gets the html from the haml template
+    // and whatever variables need to be filled in the template
+    var _getHtmlForView = function () {
+      var _templateUrl = browser.getLocalUrlFor("shared/templates/sticky_pad.html.haml");
+      var _template = haml.compileHaml( { sourceUrl: _templateUrl } );
+      var _vars = {content: 'Enter your notes here ...'};
+      var _compiledHtml = _template(_vars);
+      return _compiledHtml;
+    };
+
+
     var self = {
-      toggleVisibility : function () {
-        _visible = !_visible;
+      show : function () {
         _hideInAllTabs();
-        if(_visible == true) {
-          _showInActiveTab();
-        }
+        _showInActiveTab();
       }
     };
 
@@ -51,8 +50,8 @@ var background = function () {
 
 
   var _handleCommand = function (command_name) {
-    if(command_name === 'toggleStickyPadVisibility') {
-      _stickyPad.toggleVisibility();
+    if(command_name === 'showStickyPad') {
+      _stickyPad.show();
     }
   };
 

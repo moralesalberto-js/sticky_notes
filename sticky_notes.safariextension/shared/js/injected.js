@@ -32,7 +32,7 @@ if (window.top === window) {
       },
 
       closeStickyPad : function () {
-        alert('close the pad');
+        stickyPad.hide();
       }
     });
 

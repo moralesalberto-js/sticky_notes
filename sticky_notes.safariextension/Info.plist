@@ -24,7 +24,7 @@
 		<array>
 			<dict>
 				<key>Command</key>
-				<string>toggleStickyPadVisibility</string>
+				<string>showStickyPad</string>
 				<key>Identifier</key>
 				<string>sticky_notes</string>
 				<key>Image</key>
