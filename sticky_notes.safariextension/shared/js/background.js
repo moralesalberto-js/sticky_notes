@@ -31,7 +31,11 @@ var background = function () {
     var _getHtmlForView = function () {
       var _templateUrl = browser.getLocalUrlFor("shared/templates/sticky_pad.html.haml");
       var _template = haml.compileHaml( { sourceUrl: _templateUrl } );
-      var _vars = {content: 'Enter your notes here ...'};
+
+      // get the note saved in local storage
+      // if there is none, then just return a default string
+      var _note_content = browser.getDataFromLocalStorageForKey('note_content') || 'Enter you notes here ...';
+      var _vars = {content: _note_content};
       var _compiledHtml = _template(_vars);
       return _compiledHtml;
     };
@@ -49,21 +53,32 @@ var background = function () {
 
 
 
-  var _handleCommand = function (command_name) {
+  var _handleCommands = function (command_name) {
     if(command_name === 'showStickyPad') {
       _stickyPad.show();
     }
   };
 
-
   var _setupCommandsListener = function() {
-    browser.addBackgroundCommandListener(_handleCommand);
+    browser.addBackgroundCommandsListener(_handleCommands);
+  };
+
+
+  var _handleMessages = function(message_name, message_data) {
+    if(message_name === 'saveNoteContent') {
+      browser.saveToLocalStorage({key: 'note_content', value: message_data.content});
+    }
+  };
+
+  var _setupMessagesListener = function () {
+    browser.addBackgroundMessagesListener(_handleMessages);
   };
 
 
   var self = {
     setupListeners : function () {
       _setupCommandsListener();
+      _setupMessagesListener();
     }
   };
 

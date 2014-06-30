@@ -28,12 +28,24 @@ if (window.top === window) {
       },
 
       events: {
-        'click #sticky_pad_close' : 'closeStickyPad'
+        'click #sticky_pad_close' : 'closeStickyPad',
+        // commented the line below in favor of input, that saves
+        // as each character is typed, change only registers when
+        // the element loses focus
+        // 'change #sticky_pad_textarea' : 'saveNoteContent'
+        'input #sticky_pad_textarea' : 'saveNoteContent'
       },
 
       closeStickyPad : function () {
         stickyPad.hide();
+      },
+
+      saveNoteContent: function(event) {
+        var _field = $(event.currentTarget);
+        var _newValue = _field.val();
+        browser.sendMessageToBackground("saveNoteContent", {content: _newValue});
       }
+
     });
 
     // PUBLIC API for stickyPad
@@ -86,7 +98,7 @@ if (window.top === window) {
       setupListener: function () {
         // browser is the adapter object that has a common signature for all browsers
         // if you add or modify browser, you need to do the same for all three browser adapters
-        browser.addInjectedMessageListener(_respondToMessage);
+        browser.addInjectedMessagesListener(_respondToMessage);
       }
     };
 

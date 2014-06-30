@@ -18,6 +18,8 @@
 	<string>1</string>
 	<key>Chrome</key>
 	<dict>
+		<key>Database Quota</key>
+		<real>5242880</real>
 		<key>Global Page</key>
 		<string>safari/global.html</string>
 		<key>Toolbar Items</key>
