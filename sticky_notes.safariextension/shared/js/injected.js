@@ -18,7 +18,6 @@ if (window.top === window) {
       el: _stickyPadIdWithHash,
 
         initialize: function () {
-
         },
 
         // render
@@ -26,7 +25,6 @@ if (window.top === window) {
         // pass it a data object with the haml template to use and the vars to compile in the haml
         // Example:
         // render({ hamlTemplate: '%h1\n  = name', vars: {name: 'Alberto'}});
-
         render: function (data) {
           var _template = haml.compileHaml({source: data.hamlTemplate});
           var _compiledHtml = _template(data.vars);
