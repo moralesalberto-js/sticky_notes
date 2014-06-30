@@ -13,7 +13,7 @@ require.config({
     'underscore-string': '../shared/lib/underscore.string',
     'haml': '../shared/lib/haml',
     'background': '../shared/js/background',
-    'browser' : 'safari_browser_adapter'
+    'browser' : 'safari_browser_adapter' // *** This is the BROWSER SPECIFIC adapter code
   },
 
   shim: {

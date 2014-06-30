@@ -21,7 +21,8 @@ var backgroundObject = function () {
 
     var _showInActiveTab = function () {
       var _tab = browser.getActiveTab();
-      browser.sendMessageToTab(_tab, 'showStickyPad', 'showStickyPad');
+      var _data = { hamlTemplate: '%h1\n  = name', vars: { name: 'Alberto' } };
+      browser.sendMessageToTab(_tab, 'showStickyPad', _data);
     };
 
 

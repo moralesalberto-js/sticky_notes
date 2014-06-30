@@ -23,9 +23,9 @@ var browser = function () {
 
   var _inj
 
-  // public API shared by all browsers
-  // if you change the signature, you need to visit the implementation in all
-  // browsers
+  // PUBLIC API
+  // if you change any of these functions, you need to visit the implementation for all
+  // browsers and add your changes there as well
   var self = {
 
     // function to retun an array of all the currently open tabs

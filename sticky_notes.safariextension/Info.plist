@@ -46,6 +46,10 @@
 			<array>
 				<string>shared/lib/jquery-1.11.1.js</string>
 				<string>safari/safari_browser_adapter.js</string>
+				<string>shared/lib/underscore.js</string>
+				<string>shared/lib/underscore.string.js</string>
+				<string>shared/lib/backbone.js</string>
+				<string>shared/lib/haml.js</string>
 				<string>shared/js/injected.js</string>
 			</array>
 		</dict>
