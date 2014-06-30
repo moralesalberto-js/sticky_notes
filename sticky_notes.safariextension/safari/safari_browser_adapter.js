@@ -21,7 +21,6 @@ var browser = function () {
     _backgroundCommandListenerFunction(theCommandEvent.command);
   };
 
-  var _inj
 
   // PUBLIC API
   // if you change any of these functions, you need to visit the implementation for all
@@ -61,6 +60,12 @@ var browser = function () {
     addBackgroundCommandListener: function(functionToCall) {
       _backgroundCommandListenerFunction = functionToCall;
       safari.application.addEventListener("command", _backgroundRespondToCommand, false);
+    },
+
+    // This is the URL to access files that are in the extension directory
+    // It is used to access the haml templates for example.
+    getLocalUrlFor: function(relative_path) {
+      return (safari.extension.baseURI + relative_path);
     }
   };
 

@@ -4,4 +4,9 @@
   width: 300px;
   border: 1px solid orange;
   display: none;
+  z-index: 999999;
+}
+
+#sticky_pad_navbar {
+  float: right;
 }

@@ -17,19 +17,23 @@ if (window.top === window) {
     var StickyPadView = Backbone.View.extend({
       el: _stickyPadIdWithHash,
 
-        initialize: function () {
-        },
+      initialize: function () {
+      },
 
-        // render
-        // this is the function that will paint the view
-        // pass it a data object with the haml template to use and the vars to compile in the haml
-        // Example:
-        // render({ hamlTemplate: '%h1\n  = name', vars: {name: 'Alberto'}});
-        render: function (data) {
-          var _template = haml.compileHaml({source: data.hamlTemplate});
-          var _compiledHtml = _template(data.vars);
-          this.$el.html(_compiledHtml);
-        }
+      // render will paint the view
+      // pass it a data object with the html to display
+      render: function (data) {
+        this.$el.html(data.html); // the DOM is replaced with new html
+        this.delegateEvents();// bind all events to the new html
+      },
+
+      events: {
+        'click #sticky_pad_close' : 'closeStickyPad'
+      },
+
+      closeStickyPad : function () {
+        alert('close the pad');
+      }
     });
 
     // PUBLIC API for stickyPad

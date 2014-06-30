@@ -2,7 +2,7 @@
 // (1) maintain the state of this extension while Safari is running
 // (2) handle the messaging between the background process and the injected scripts
 
-var backgroundObject = function () {
+var background = function () {
 
   // This is the object that represents the stickyPad in the backround process
   // It will send messages to the active tab to update the display in the stickyPad
@@ -18,10 +18,19 @@ var backgroundObject = function () {
       }
     };
 
+    var _getHtmlForView = function () {
+      var _templateUrl = browser.getLocalUrlFor("shared/templates/sticky_pad.html.haml");
+      var _template = haml.compileHaml( { sourceUrl: _templateUrl } );
+      var _compiledHtml = _template({name: 'Alberto Morales'});
+      return _compiledHtml;
+    };
+
 
     var _showInActiveTab = function () {
       var _tab = browser.getActiveTab();
-      var _data = { hamlTemplate: '%h1\n  = name', vars: { name: 'Alberto' } };
+      var _data = { html: _getHtmlForView() };
+      // we send a message to the injected script with the html
+      // to paint the view
       browser.sendMessageToTab(_tab, 'showStickyPad', _data);
     };
 
@@ -63,9 +72,4 @@ var backgroundObject = function () {
 
 }.call();
 
-// using require.js so here we return the background object
-// using the define syntax stating the dependencies for this 'backround.js' script
-define(['jquery', 'browser'], function(jquery, browser) {
-  return backgroundObject;
-});
 
