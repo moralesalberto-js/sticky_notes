@@ -30,7 +30,7 @@
 				<key>Identifier</key>
 				<string>sticky_notes</string>
 				<key>Image</key>
-				<string>safari/icon.png</string>
+				<string>shared/images/icon.png</string>
 				<key>Label</key>
 				<string>sticky_notes</string>
 				<key>Palette Label</key>
