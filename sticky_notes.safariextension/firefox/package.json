@@ -1,0 +1,13 @@
+{
+  "name"         : "stickynotes",
+  "title"        : "StickyNotes",
+  "description"  : "Add Notes",
+  "version"      : "1.0",
+  "id"           : "jid1-gAkXSlruh1Chlg",
+
+  "icon"         : "data/images/icon.png",
+
+  "permissions"  : { "private-browsing"         : "true",
+                     "cross-domain-content"     : ["http://bublup.herokuapp.com/"]
+                   }
+}
