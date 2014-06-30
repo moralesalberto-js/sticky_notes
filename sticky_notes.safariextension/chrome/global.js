@@ -9,9 +9,10 @@ $(document).ready(function () {
 
     //This sets up the button and the command event linked with it
     var _setupButton = function(){
-      chrome.browserAction.onClicked.addListener(
-        chrome.extension.runtime.sendMessage({name:"showStickyPad", data: ""})
-      );
+      console.log(" set up button");
+      chrome.browserAction.onClicked.addListener(function(tab){
+        chrome.runtime.sendMessage({name:"showStickyPad", data: ""});
+      });
     };
 
     var self = {
@@ -19,6 +20,8 @@ $(document).ready(function () {
         _setupButton();
       }
     };
+
+    return self;
 
   }.call();
 

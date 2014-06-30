@@ -18,7 +18,7 @@ var browser = function () {
   // this receives the command (click of toolbar) by Safari
   // sends it translated to the signature of the generic response to command
   // _function(command_name)
-  // !!!!!!! Why not command data ?
+// !!!!!!! Perhaps optional command Data ?
   var _backgroundRespondToCommands = function(theCommandEvent) {
     _backgroundCommandsListenerFunction(theCommandEvent.name);
   };
@@ -38,7 +38,7 @@ var browser = function () {
 
     // function to retun an array of all the currently open tabs
 
-    // !!!!!! Callback in chrome
+// !!!!!! Callback in chrome
     getAllTabs: function () {
       var _allTabs = [];
       for(var i = 0; i < safari.application.browserWindows.length; i++) {
@@ -62,12 +62,12 @@ var browser = function () {
     // send a message to a specific tab
     sendMessageToTab: function(tab, message, data) {
       chrome.tabs.sendMessage(tab.id, {name: message, data: data});
-      chrome.extension.runtime.sendMessage({name: message, data: data});
+      chrome.runtime.sendMessage({name: message, data: data});
     },
 
     // send a message from injected script to background js
     sendMessageToBackground: function(message, data) {
-      chrome.extension.runtime.sendMessage({name: message, data: data});
+      chrome.runtime.sendMessage({name: message, data: data});
     },
 
     // the adapter listener for messages
@@ -81,7 +81,7 @@ var browser = function () {
     // assign the command passed to our variable to call later
     // register the command listener
     // functionToCall (message_name, message_data)
-    // !!!!!! Not same distinction in chrome, check global.js
+// !!!!!! Not same distinction in chrome, check global.js
     addBackgroundCommandsListener: function(functionToCall) {
       _backgroundCommandsListenerFunction = functionToCall;
       chrome.runtime.onMessage.addListener(_backgroundRespondToCommands);
@@ -105,7 +105,7 @@ var browser = function () {
     // local storage works with simple key, value stores
     // For this exercise we are only saving a single note
     // We can add pagination later on to have multiple notes
-    // !!!!!!! The specific and better chrome storage is Asynchronous
+// !!!!!!! The specific and better chrome storage is Asynchronous
     saveToLocalStorage: function(data) {
       localStorage[data.key] = data.value;
     },
