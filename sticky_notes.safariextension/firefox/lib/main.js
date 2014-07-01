@@ -50,7 +50,9 @@ var ExtensionSelf = require('sdk/self');
 
 
   //Scripts set up adapter
-  //Firefox sets up scripts with a function and with manifest declarations
+  //Firefox sets up scripts with a function and not with manifest declarations
+
+  //This is also where to inject style that uses relative path functions
   var scriptsAdapter = function() {
 
   //This injects the script in all regular content that gets loaded in the browser
@@ -59,18 +61,22 @@ var ExtensionSelf = require('sdk/self');
         include: '*',
         contentScriptFile: [
           ExtensionSelf.data.url("shared/lib/jquery-1.11.1.js"),
+          ExtensionSelf.data.url("shared/lib/underscore.js"),
+          ExtensionSelf.data.url("shared/lib/underscore.string.js"),
           ExtensionSelf.data.url("shared/lib/backbone.js"),
           ExtensionSelf.data.url("shared/lib/haml.js"),
-          ExtensionSelf.data.url("/shared/js/injected.js"),
+          ExtensionSelf.data.url("shared/js/injected.js")
         ],
-        contentStyleFile: ExtensionSelf.data.url("styles.css"),
+        contentStyleFile: ExtensionSelf.data.url("shared/css/styles.css"),
         contentStyle: [
-          ".existing { background-image: url(" + ExtensionSelf.data.url("bublup-icon.png") + ")}",
-          ".filtered { background-image: url(" + ExtensionSelf.data.url("blacklist-icon.png") + ")}"
+          // !!!!! Here we can add url('') path that will get included in every page
+          // ".existing { background-image: url(" + ExtensionSelf.data.url("bublup-icon.png") + ")}",
         ],
         attachTo: ["existing", "top"],
         onAttach: function(worker) {
-          _setupMessaging(worker);
+          // !!!!! Here we have access to the page worker, and can attach it the messaging rules
+          // !!!!! Or we can put it in an array to retrieve it later ( But arrays of worker are a pain !)
+          // _setupMessaging(worker);
         }
       });
     };
@@ -88,7 +94,7 @@ var ExtensionSelf = require('sdk/self');
   }.call();
 
 // !!!! Cannot use Jquery in this page in firefox (logic because there is no DOM)
-
+// So no $.on(ready)
   console.log(_.levenshtein('kitten', 'kittah'));
   commandsAdapter.setupAll();
   scriptsAdapter.setupAll();
