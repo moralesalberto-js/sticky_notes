@@ -8,6 +8,5 @@
   "icon"         : "data/images/icon.png",
 
   "permissions"  : { "private-browsing"         : "true",
-                     "cross-domain-content"     : ["http://bublup.herokuapp.com/"]
                    }
 }

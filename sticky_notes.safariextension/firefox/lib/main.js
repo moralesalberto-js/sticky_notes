@@ -9,6 +9,8 @@ var _ = require("./shared/lib/underscore");
 _.str = require("./shared/lib/underscore.string");
 _.mixin(_.str.exports());
 
+var background = require("./shared/background");
+
 //Listing of the APIS needed in the extension
 var PageModifier = require("sdk/page-mod");
 var {ActionButton} = require('sdk/ui/button/action');
@@ -98,5 +100,6 @@ var ExtensionSelf = require('sdk/self');
   console.log(_.levenshtein('kitten', 'kittah'));
   commandsAdapter.setupAll();
   scriptsAdapter.setupAll();
+
   background.setupListeners();
 
