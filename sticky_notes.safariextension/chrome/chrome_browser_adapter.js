@@ -52,7 +52,7 @@ var browser = function () {
       // return chrome.tabs.query
     },
 
-    // !!!!!! Callback in chrome
+// !!!!!! Callback in chrome
     getActiveTab: function () {
       //return chrome.tabs.query({active: true, lastFocusedWindow: true},function(tabs){
 
