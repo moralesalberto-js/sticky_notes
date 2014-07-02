@@ -11,5 +11,5 @@ It imposes everywhere firefox structure because :
 
 Folders : doc, locales, and test are just here to say " Hey this might be useful later".
 
-This won't work without effective automatic synchronization of the folders at some point during the developement because symlinks are not followed.
+This won't work without effective automatic synchronization of the folders at some point during the developement because symlinks are not followed during the build of extensions... Some bash scripts will be involved !
 
