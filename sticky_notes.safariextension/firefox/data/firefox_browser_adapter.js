@@ -8,7 +8,7 @@ var browser = function () {
   var _backgroundCommandsListenerFunction;
   var _backgroundMessagesListenerFunction;
 
-  // we receive the event in Chrome way
+  // ????We do not receive events in Firefox way
   // we translate it to the two variables in the shared interface
   // _function(message_name, message_data)
   var _injectedRespondToMessages = function(theMessageEvent) {
@@ -18,7 +18,6 @@ var browser = function () {
   // this receives the command (click of toolbar) by Safari
   // sends it translated to the signature of the generic response to command
   // _function(command_name)
-// !!!!!!! Perhaps optional command Data ?
   var _backgroundRespondToCommands = function(theCommandEvent) {
     _backgroundCommandsListenerFunction(theCommandEvent.name);
   };
@@ -30,61 +29,82 @@ var browser = function () {
     _backgroundMessagesListenerFunction(message_name, message_data);
   };
 
+  var _getWorker = function(tab){
+
+  };
 
   // PUBLIC API
   // if you change any of these functions, you need to visit the implementation for all
   // browsers and add your changes there as well
-  var self = {
+  var _self = {
 
     // function to retun an array of all the currently open tabs
-
 // !!!!!! Callback in chrome
+// ?????? Different levels of Tab object in firefox API This is High level
     getAllTabs: function () {
-      var _allTabs = [];
-      for(var i = 0; i < safari.application.browserWindows.length; i++) {
-        var currentWindow = safari.application.browserWindows[i];
-        for(var j=0; j < currentWindow.tabs.length; j++) {
-          var tab = currentWindow.tabs[j];
-          _allTabs.push(tab);
-        }
-      }
+      var _allTabs = require("sdk/tabs");
       return _allTabs;
-      // return chrome.tabs.query
     },
 
 // !!!!!! Callback in chrome
+// ?????? Different levels of Tab object in firefox API This is High level
     getActiveTab: function () {
-      //return chrome.tabs.query({active: true, lastFocusedWindow: true},function(tabs){
-
-      //});
+      var _allTabs = require("sdk/tabs");
+      return _allTabs.activeTab;
     },
 
     // send a message to a specific tab
+// ?????? Not same way in firefox, send message to a worker
+// ?????? Need of another function
     sendMessageToTab: function(tab, message, data) {
-      chrome.tabs.sendMessage(tab.id, {name: message, data: data});
-      chrome.runtime.sendMessage({name: message, data: data});
+      tabWorker = _getWorker(tab);
+      tabWorker.port.emit("tab",{name:message, data: data});
     },
 
     // send a message from injected script to background js
+// ?????? Not same way in firefox, send message to a worker
+// But this side of communication is ok
     sendMessageToBackground: function(message, data) {
-      chrome.runtime.sendMessage({name: message, data: data});
+      self.port.emit("background",{name:message, data:data});
     },
 
     // the adapter listener for messages
     // (This function is called once by page)
     // functiontoCall(message_name, message_data)
+// ?????? Trick to bypass the atomic way of firefox
+
+    // addInjectedMessagesSingleListenerFirefox: function (message, functionToCall){
+    //   self.port.on("tab",functionToCall);
+    // },
+    // addInjectedMessagesListener: function(hash_message_functions){
+    //   for (var message_functions in hash_message_functions){
+    //     addInjectedMessagesSingleListenerFirefox(messages_functions.message, messages_functions.functionToCall);
+    //   }
+    // },
     addInjectedMessagesListener: function(functionToCall) {
       _injectedMessagesListenerFunction = functionToCall;
-      chrome.runtime.onMessage.addListener(_injectedRespondToMessages);
+      self.port.on("tab",_injectedRespondToMessages);
     },
 
     // assign the command passed to our variable to call later
     // register the command listener
     // functionToCall (message_name, message_data)
 // !!!!!! Not same distinction in chrome, check global.js
+// ?????? Not same distinction in firefox
+// Can be done at only one time in firefox when scripts are set up, and
+// only in a more atomic way
+
+    // addBackgroundCommandsSingleListenerFirefox: function(message, functionToCall){
+    //   self.port.on(message,functionToCall);
+    // },
+    // addBackgroundCommandsListener: function(hash_commands_functions) {
+    //   for (var commands_functions in hash_commands_functions){
+    //     addInjectedMessagesSingleListenerFirefox(commands_functions.message, commands_functions.functionToCall);
+    //   }
+    // },
     addBackgroundCommandsListener: function(functionToCall) {
       _backgroundCommandsListenerFunction = functionToCall;
-      chrome.runtime.onMessage.addListener(_backgroundRespondToCommands);
+      self.port.on("command",_backgroundRespondToCommands);
     },
 
     // similar to commands, assign the function to call
@@ -92,13 +112,14 @@ var browser = function () {
     // and translate it to the generic form
     addBackgroundMessagesListener: function(functionToCall) {
       _backgroundMessagesListenerFunction = functionToCall;
-      chrome.runtime.onMessage.addListener(_backgroundRespondToMessages);
+      self.port.on("background",_backgroundRespondToMessages);
     },
 
     // This is the URL to access files that are in the extension directory
     // It is used to access the haml templates for example.
     getLocalUrlFor: function(relative_path) {
-      return chrome.extension.getURL(relative_path);
+      return self.data.url(relative_path);
+      // return chrome.extension.getURL(relative_path);
     },
 
     // LOCAL STORAGE
@@ -106,7 +127,10 @@ var browser = function () {
     // For this exercise we are only saving a single note
     // We can add pagination later on to have multiple notes
 // !!!!!!! The specific and better chrome storage is Asynchronous
+// ??????? firefox storage uses an API
     saveToLocalStorage: function(data) {
+      // var ss = require("sdk/simple-storage");
+      // ss.storage.data.key= data.value; ???
       localStorage[data.key] = data.value;
     },
 
@@ -115,9 +139,6 @@ var browser = function () {
     }
   };
 
-  return self;
+  return _self;
 
 }.call();
-
-
-

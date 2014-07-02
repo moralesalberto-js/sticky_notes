@@ -1,7 +1,22 @@
 // This is the adapater object that will wrap all the safari specific calls
 // Use the same interface for the other browsers
 
-var browser = function () {
+//Listing of the CommmonJS modules that we have to load here
+//Because Firefox does not do it the way the other do :(
+//see https://github.com/epeli/underscore.string#nodejs-installation
+var _ = require("./shared/lib/underscore");
+_.str = require("./shared/lib/underscore.string");
+_.mixin(_.str.exports());
+
+var background = require("./shared/background").background;
+
+//Listing of the APIS needed in the extension
+var PageModifier = require("sdk/page-mod");
+var {ActionButton} = require('sdk/ui/button/action');
+var ExtensionSelf = require('sdk/self');
+
+exports.browser = function () {
+
   // this is the var that will hold the function the extension registered
   // as the function to listen for injected scripts
   var _injectedMessagesListenerFunction;
@@ -29,11 +44,113 @@ var browser = function () {
     _backgroundMessagesListenerFunction(message_name, message_data);
   };
 
+  var _commandsAdapter = function(){
+
+    //This sets up the button and the command event linked with it
+    var _setupButton = function(){
+
+      //function linked to the click event
+      function buttonClicked() {
+        require("./shared/background").background.showStickyPad();
+      }
+
+      //Set up the addon button the function called on click event
+      ActionButton({
+        id: "bublupButton",
+        label: "Open Bublup !",
+        icon: "./shared/images/icon.png",
+        onClick: buttonClicked
+      });
+
+    };
+
+    var self_ = {
+      setupAll : function(){
+        _setupButton();
+      }
+    };
+
+    return self_;
+
+  }.call();
+
+
+  //Scripts set up adapter
+  //Firefox sets up scripts with a function and not with manifest declarations
+  //This is also where we have to inject the messaging logic
+  //This is also where to inject style that uses relative path functions
+  var _scriptsAdapter = function() {
+    _workersArray=[];
+    var _setupMessaging = function(worker){
+      //we attach all the background rules to all workers
+      worker.port.on('background', function(message) {
+        message_name=message.name;
+        message_data=message.data;
+        //Here are the rules declarations
+        //WE WANT THEM TO BE IN SHARED
+        if(message_name === 'saveNoteContent') {
+          browser.saveToLocalStorage({key: 'note_content', value: message_data.content});
+        }
+      });
+    };
+  //This injects the script in all regular content that gets loaded in the browser
+    var _injectScriptInAllUrls = function() {
+      PageModifier.PageMod({
+        include: '*',
+        contentScriptFile: [
+          ExtensionSelf.data.url("shared/lib/jquery-1.11.1.js"),
+          ExtensionSelf.data.url("shared/lib/underscore.js"),
+          ExtensionSelf.data.url("shared/lib/underscore.string.js"),
+          ExtensionSelf.data.url("shared/lib/backbone.js"),
+          ExtensionSelf.data.url("shared/lib/haml.js"),
+          ExtensionSelf.data.url("firefox_browser_adapter.js"),
+          ExtensionSelf.data.url("shared/js/injected.js")
+        ],
+        contentStyleFile: ExtensionSelf.data.url("shared/css/styles.css"),
+        contentStyle: [
+          // !!!!! Here we can add url('') path that will get included in every page
+          // ".existing { background-image: url(" + ExtensionSelf.data.url("bublup-icon.png") + ")}",
+        ],
+        attachTo: ["existing", "top"],
+        onAttach: function(worker) {
+          _workersArray.push(worker);
+          // !!!!! Here we have access to the page worker, and can attach it the messaging rules
+          // !!!!! Or we can put it in an array to retrieve it later ( But arrays of worker are a pain !)
+          _setupMessaging(worker);
+        }
+      });
+    };
+
+
+    var self_ = {
+      getWorker : function(tab){
+        var res=null;
+        var i=0;
+        while(res===null && i<_workersArray.size){
+          if(_workersArray[i].tab===tab){
+            res=_workersArray[i];
+          }
+        }
+        return res;
+      },
+      setupAll : function(){
+        _injectScriptInAllUrls();
+      }
+    };
+
+    return self_;
+  }.call();
 
   // PUBLIC API
   // if you change any of these functions, you need to visit the implementation for all
   // browsers and add your changes there as well
-  var self = {
+  var self_ = {
+
+    //function to setup scripts and messaging, stub in safari and chrome
+    setUpScripts : function (){
+      _commandsAdapter.setupAll();
+      _scriptsAdapter.setupAll();
+    },
 
     // function to retun an array of all the currently open tabs
 // !!!!!! Callback in chrome
@@ -54,7 +171,7 @@ var browser = function () {
 // ?????? Not same way in firefox, send message to a worker
 // ?????? Need of another function
     sendMessageToTab: function(tab, message, data) {
-      tabWorker = _getWorker(tab);
+      tabWorker = _scriptsAdapter.getWorker(tab);
       tabWorker.port.emit("tab",{name:message, data: data});
     },
 
@@ -136,7 +253,7 @@ var browser = function () {
     }
   };
 
-  return self;
+  return self_;
 
 }.call();
 
