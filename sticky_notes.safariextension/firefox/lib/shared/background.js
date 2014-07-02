@@ -45,9 +45,10 @@ exports.background = function () {
       var _vars = {content: _note_content};
       console.log(_vars);
       // var _compiledHtml = _template(_vars);
-      var _compiledHtml = haml.compileHaml({source :string}).call(_vars);
+      // var _compiledHtml = haml.compileHaml({source :string}).call(_vars);
 
-      return _compiledHtml;
+      // return _compiledHtml;
+      return "<textarea>"+string+"</textarea>";
     };
 
 

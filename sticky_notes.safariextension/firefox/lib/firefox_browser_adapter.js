@@ -96,6 +96,14 @@ exports.browser = function () {
     };
   //This injects the script in all regular content that gets loaded in the browser
     var _injectScriptInAllUrls = function() {
+
+      function _detachWorker(worker, workerArray) {
+        var index = workerArray.indexOf(worker);
+        if(index != -1) {
+          workerArray.splice(index, 1);
+        }
+      }
+
       PageModifier.PageMod({
         include: '*',
         contentScriptFile: [
@@ -115,10 +123,15 @@ exports.browser = function () {
         attachTo: ["existing", "top"],
         onAttach: function(worker) {
           _workersArray.push(worker);
-          console.log(worker.tab.title);
+          console.log("workeer injected in" + worker.tab.title);
           // !!!!! Here we have access to the page worker, and can attach it the messaging rules
           // !!!!! Or we can put it in an array to retrieve it later ( But arrays of worker are a pain !)
           _setupMessaging(worker);
+
+          //Cleaning the worker array
+          worker.on('detach', function () {
+            _detachWorker(this, _workersArray);
+          });
         }
       });
     };
@@ -128,11 +141,18 @@ exports.browser = function () {
       getWorker : function(tab){
         var res=null;
         var i=0;
-        console.log("WORKERS ARRAY"+_workersArray.length);
+        console.log("Workers array of size : "+_workersArray.length);
+        for (var wor in _workersArray){
+          console.log("Worker"+wor.id + "   Title ");
+          if (wor.tab !==undefined){
+            console.log("title:"+wor.tab.title);
+          }
+        }
         while(res===null && i<_workersArray.length){
           if(_workersArray[i].tab!==null && _workersArray[i].tab.id===tab.id){
             res=_workersArray[i];
           }
+          i++;
         }
         return res;
       },
