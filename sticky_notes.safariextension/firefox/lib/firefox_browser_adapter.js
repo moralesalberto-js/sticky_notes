@@ -14,6 +14,7 @@ var background = require("./shared/background").background;
 var PageModifier = require("sdk/page-mod");
 var {ActionButton} = require('sdk/ui/button/action');
 var ExtensionSelf = require('sdk/self');
+var ss = require("sdk/simple-storage");
 
 exports.browser = function () {
 
@@ -80,7 +81,7 @@ exports.browser = function () {
   //This is also where we have to inject the messaging logic
   //This is also where to inject style that uses relative path functions
   var _scriptsAdapter = function() {
-    _workersArray=[];
+    var _workersArray =[];
     var _setupMessaging = function(worker){
       //we attach all the background rules to all workers
       worker.port.on('background', function(message) {
@@ -114,6 +115,7 @@ exports.browser = function () {
         attachTo: ["existing", "top"],
         onAttach: function(worker) {
           _workersArray.push(worker);
+          console.log(worker.tab.title);
           // !!!!! Here we have access to the page worker, and can attach it the messaging rules
           // !!!!! Or we can put it in an array to retrieve it later ( But arrays of worker are a pain !)
           _setupMessaging(worker);
@@ -126,8 +128,9 @@ exports.browser = function () {
       getWorker : function(tab){
         var res=null;
         var i=0;
-        while(res===null && i<_workersArray.size){
-          if(_workersArray[i].tab===tab){
+        console.log("WORKERS ARRAY"+_workersArray.length);
+        while(res===null && i<_workersArray.length){
+          if(_workersArray[i].tab!==null && _workersArray[i].tab.id===tab.id){
             res=_workersArray[i];
           }
         }
@@ -232,7 +235,7 @@ exports.browser = function () {
     // This is the URL to access files that are in the extension directory
     // It is used to access the haml templates for example.
     getLocalUrlFor: function(relative_path) {
-      return self.data.url(relative_path);
+      return ExtensionSelf.data.url(relative_path);
       // return chrome.extension.getURL(relative_path);
     },
 
@@ -243,13 +246,12 @@ exports.browser = function () {
 // !!!!!!! The specific and better chrome storage is Asynchronous
 // ??????? firefox storage uses an API
     saveToLocalStorage: function(data) {
-      // var ss = require("sdk/simple-storage");
-      // ss.storage.data.key= data.value; ???
-      localStorage[data.key] = data.value;
+      ss.storage.data.key= data.value;
+      // localStorage[data.key] = data.value;
     },
 
     getDataFromLocalStorageForKey: function(key) {
-      return localStorage[key];
+      return ss.storage.key;
     }
   };
 
