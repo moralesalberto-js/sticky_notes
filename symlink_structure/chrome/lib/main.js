@@ -1,4 +1,4 @@
-// This is the main background script that will run in the Firefox extension
+// This is the main background script that will run in the CHROME extension
 // The script runs once, every time Firefox is started.
 
 //This is NOT the same for all browsers
