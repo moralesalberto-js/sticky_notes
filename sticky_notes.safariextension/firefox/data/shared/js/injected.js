@@ -49,7 +49,7 @@ if (window.top === window) {
     });
 
     // PUBLIC API for stickyPad
-    var self = {
+    var _self = {
 
       // add the sticky pad to the DOM in the web page
       // set the Backbone View for stickyPad
@@ -73,7 +73,7 @@ if (window.top === window) {
       }
     };
 
-    return self;
+    return _self;
   }.call();
 
 
@@ -94,7 +94,7 @@ if (window.top === window) {
     };
 
 
-    var self = {
+    var _self = {
       setupListener: function () {
         // browser is the adapter object that has a common signature for all browsers
         // if you add or modify browser, you need to do the same for all three browser adapters
@@ -102,12 +102,13 @@ if (window.top === window) {
       }
     };
 
-    return self;
+    return _self;
   }.call();
 
 
 
   $(document).ready(function () {
+    console.log("Script injected");
     stickyPad.initialize();
     messaging.setupListener();
   });

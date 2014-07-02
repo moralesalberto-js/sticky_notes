@@ -2,6 +2,8 @@
 // (1) maintain the state of this extension while Safari is running
 // (2) handle the messaging between the background process and the injected scripts
 
+var browser = require("../firefox_browser_adapter");
+
 var background = function () {
 
   // This is the object that represents the stickyPad in the backround process

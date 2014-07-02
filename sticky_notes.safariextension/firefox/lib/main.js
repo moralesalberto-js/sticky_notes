@@ -25,9 +25,10 @@ var ExtensionSelf = require('sdk/self');
 
       //function linked to the click event
       function buttonClicked() {
-        function (tab){
+        // function (tab){
           // !!! chrome.runtime.sendMessage({name:"showStickyPad", data: ""});
-        }
+        //}
+        console.log("buttonClicked");
       }
 
       //Set up the addon button the function called on click event
@@ -67,6 +68,7 @@ var ExtensionSelf = require('sdk/self');
           ExtensionSelf.data.url("shared/lib/underscore.string.js"),
           ExtensionSelf.data.url("shared/lib/backbone.js"),
           ExtensionSelf.data.url("shared/lib/haml.js"),
+          ExtensionSelf.data.url("firefox_browser_adapter.js"),
           ExtensionSelf.data.url("shared/js/injected.js")
         ],
         contentStyleFile: ExtensionSelf.data.url("shared/css/styles.css"),

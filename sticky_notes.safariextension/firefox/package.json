@@ -5,8 +5,8 @@
   "version"      : "1.0",
   "id"           : "jid1-gAkXSlruh1Chlg",
 
-  "icon"         : "data/images/icon.png",
+  "icon"         : "data/shared/images/icon.png",
 
-  "permissions"  : { "private-browsing"         : "true",
+  "permissions"  : { "private-browsing"         : "true"
                    }
 }
