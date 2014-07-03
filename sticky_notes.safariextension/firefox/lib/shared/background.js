@@ -35,20 +35,21 @@ exports.background = function () {
     var _getHtmlForView = function () {
       var _templateUrl = browser.getLocalUrlFor("shared/templates/sticky_pad.html.haml");
       console.log(_templateUrl);
-      var string= "%textarea{id: 'sticky_pad_textarea'}\n = content";
+      var string = "%textarea Hellooooo";
       // var _template = hamlmodule.compileHaml( { sourceUrl: _templateUrl } );
-      // var _template =haml.compileHaml({source :string});
+      // var _template = haml.compileHaml({source :string});
       // console.log(_template);
       // get the note saved in local storage
       // if there is none, then just return a default string
       var _note_content = browser.getDataFromLocalStorageForKey('note_content') || 'Enter you notes here ...';
       var _vars = {content: _note_content};
-      console.log(_vars);
-      // var _compiledHtml = _template(_vars);
+      // console.log(_vars);
+      // console.log(_template);
+      // var _compiledHtml = _template();
       // var _compiledHtml = haml.compileHaml({source :string}).call(_vars);
-
+      string = _vars.content;
       // return _compiledHtml;
-      return "<textarea>"+string+"</textarea>";
+      return "<div id='sticky_pad_navbar'><a href='javascript:void(0)', id='sticky_pad_close'>Close (X)</a></div><br/><textarea id='sticky_pad_textarea'>"+string+"</textarea>";
     };
 
 

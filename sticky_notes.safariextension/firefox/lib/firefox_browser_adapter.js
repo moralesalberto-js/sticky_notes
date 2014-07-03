@@ -16,7 +16,7 @@ var {ActionButton} = require('sdk/ui/button/action');
 var ExtensionSelf = require('sdk/self');
 var ss = require("sdk/simple-storage");
 
-exports.browser = function () {
+var browser = function () {
 
   // this is the var that will hold the function the extension registered
   // as the function to listen for injected scripts
@@ -81,44 +81,52 @@ exports.browser = function () {
   //This is also where we have to inject the messaging logic
   //This is also where to inject style that uses relative path functions
   var _scriptsAdapter = function() {
+
+    //This array register the workers linked to injected scripts
+    //so they can be accessed later
     var _workersArray =[];
+
+    //This implements the messaging rules for the background script to the workers
     var _setupMessaging = function(worker){
       //we attach all the background rules to all workers
       worker.port.on('background', function(message) {
         message_name=message.name;
         message_data=message.data;
         //Here are the rules declarations
-        //WE WANT THEM TO BE IN SHARED
+        //!!!!!! WE WANT THEM TO BE IN SHARED
         if(message_name === 'saveNoteContent') {
           browser.saveToLocalStorage({key: 'note_content', value: message_data.content});
         }
       });
     };
-  //This injects the script in all regular content that gets loaded in the browser
+
+    //Cleans the worker array when a tab is destroyed
+    var _detachWorker = function (worker, workersArray) {
+      var index = workersArray.indexOf(worker);
+      if(index != -1) {
+        workersArray.splice(index, 1);
+      }
+    };
+
+    //Keeps only the last worker for each tab upon insertion in the array
+    var _insertWorker = function(worker, workersArray){
+      var n = workersArray.length;
+      var i= 0;
+        while (i<n) {
+        if (workersArray[i].tab.id===worker.tab.id){
+          workersArray.splice(i, 1);
+          n--;
+        }
+        i++;
+      }
+      workersArray.push(worker);
+      };
+
+    //This injects the script in all regular content that gets loaded in the browser
     var _injectScriptInAllUrls = function() {
 
-      //Cleans the worker array when a tab is destroyed
-      function _detachWorker(worker, workersArray) {
-        var index = workersArray.indexOf(worker);
-        if(index != -1) {
-          workersArray.splice(index, 1);
-        }
-      }
-
-      //Keeps only the last worker for each tab upon insertion in the array
-      function _insertWorker(worker, workersArray){
-        var n = workersArray.length;
-        var i= 0;
-          while (i<n) {
-          if (workersArray[i].tab.id===worker.tab.id){
-            workersArray.splice(i, 1);
-            n--;
-          }
-          i++;
-        }
-        workersArray.push(worker);
-      }
-
+      //Includes content scripts and stylesheets in matching '*' pages
+      //Only access to the worker object which register the messaging rules
       PageModifier.PageMod({
         include: '*',
         contentScriptFile: [
@@ -132,20 +140,20 @@ exports.browser = function () {
         ],
         contentStyleFile: ExtensionSelf.data.url("shared/css/styles.css"),
         contentStyle: [
-          // !!!!! Here we can add url('') path that will get included in every page
+          // !!!!! Here we can add url('') paths that will get included in every page
+          // For example :
           // ".existing { background-image: url(" + ExtensionSelf.data.url("bublup-icon.png") + ")}",
         ],
+        //Do not include the script in iframes
         attachTo: ["existing", "top"],
         onAttach: function(worker) {
+          //A worker is the link between background script and the content script
+          //that was just loaded
+          //See the Firefox SDK documentation
           _insertWorker(worker,_workersArray);
-          console.log("workeer injected in" + worker.tab.title +" with url " + worker.url);
-          // !!!!! Here we have access to the page worker, and can attach it the messaging rules
-          // !!!!! Or we can put it in an array to retrieve it later ( But arrays of worker are a pain !)
           _setupMessaging(worker);
-
-          //Cleaning the worker array
+          //Cleaning the worker array when the relative tab is deleted
           worker.on('detach', function () {
-            console.log("Detach call");
             _detachWorker(this, _workersArray);
           });
         }
@@ -154,21 +162,16 @@ exports.browser = function () {
 
 
     var self_ = {
+      //This is to retrieve worker from the Array
       getWorker : function(tab){
         var res=null;
         var i=0;
-        console.log("We are opening" + tab.url);
-        console.log("Workers array of size : "+_workersArray.length);
         while(i<_workersArray.length){
-          console.log(_workersArray[i].tab.url);
           if(_workersArray[i].tab!==undefined && _workersArray[i].tab.url===tab.url){
-            console.log("Worker found" + i);
-            console.log("Woker status" + _workersArray[i].tab.title + _workersArray[i].tab.id);
             res=_workersArray[i];
           }
           i++;
         }
-        console.log("Res"+res.tab.url);
         return res;
       },
       setupAll : function(){
@@ -281,12 +284,12 @@ exports.browser = function () {
 // !!!!!!! The specific and better chrome storage is Asynchronous
 // ??????? firefox storage uses an API
     saveToLocalStorage: function(data) {
-      ss.storage.data.key= data.value;
+      eval("ss.storage."+data.key+"= data.value");
       // localStorage[data.key] = data.value;
     },
 
     getDataFromLocalStorageForKey: function(key) {
-      return ss.storage.key;
+      return eval("ss.storage."+key);
     }
   };
 
@@ -294,5 +297,5 @@ exports.browser = function () {
 
 }.call();
 
-
+exports.browser=browser;
 
