@@ -23,7 +23,6 @@ var background = function () {
       // we send a message to the injected script with the html
       // to paint the view
       browser.getActiveTab(function(_tab){
-        console.log("GET ACTIVE TAB" +_tab + _tab.id);
         browser.sendMessageToTab(_tab, 'showStickyPad', _data);
       });
     };
