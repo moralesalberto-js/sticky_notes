@@ -46,7 +46,7 @@ var background = function () {
         var _vars = {content: _note_content};
         var _compiledHtml = _template(_vars);
         ========================================================*/
-      var _note_content = browser.getDataFromLocalStorageForKey('note_content') || 'Enter you notes here ...';
+      var _note_content = background_adapter.getDataFromLocalStorageForKey('note_content') || 'Enter you notes here ...';
       var _vars = {content: _note_content};
       var _compiledHtml ="<div id='sticky_pad_navbar'><a href='javascript:void(0)', id='sticky_pad_close'>Close (X)</a></div><br/><textarea id='sticky_pad_textarea'>"+_vars.content+"</textarea>";
       return _compiledHtml;

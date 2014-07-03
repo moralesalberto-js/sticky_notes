@@ -197,14 +197,15 @@ var background_adapter = function () {
     // function to retun an array of all the currently open tabs
     // callback = function([tabs])
     getAllTabs: function (callback) {
+      console.log("get tabs called");
       var _allTabs = require("sdk/tabs");
-      return _allTabs;
+      callback(_allTabs);
     },
 
     // callback = function(tab)
     getActiveTab: function (callback) {
       var _allTabs = require("sdk/tabs");
-      return _allTabs.activeTab;
+      callback(_allTabs.activeTab);
     },
 
     // send a message to a specific tab

@@ -43,7 +43,7 @@ if (window.top === window) {
       saveNoteContent: function(event) {
         var _field = $(event.currentTarget);
         var _newValue = _field.val();
-        browser.sendMessageToBackground("saveNoteContent", {content: _newValue});
+        front_adapter.sendMessageToBackground("saveNoteContent", {content: _newValue});
       }
 
     });
@@ -81,7 +81,7 @@ if (window.top === window) {
 
     // This is the shared interface to receive a message, it has two variables
     // the message name, and the message_data
-    // In the browser adapter you set the translation
+    // In the front_adapter adapter you set the translation
     var _respondToMessage = function (message_name, message_data) {
 
       if (message_name === 'showStickyPad') {
@@ -96,9 +96,9 @@ if (window.top === window) {
 
     var _self = {
       setupListener: function () {
-        // browser is the adapter object that has a common signature for all browsers
-        // if you add or modify browser, you need to do the same for all three browser adapters
-        browser.addInjectedMessagesListener(_respondToMessage);
+        // front_adapter is the adapter object that has a common signature for all front_adapters
+        // if you add or modify front_adapter, you need to do the same for all three front_adapter adapters
+        front_adapter.addInjectedMessagesListener(_respondToMessage);
       }
     };
 
