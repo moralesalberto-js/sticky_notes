@@ -1,0 +1,12 @@
+{
+  "name"         : "stickynotes",
+  "title"        : "StickyNotes",
+  "description"  : "Add Notes",
+  "version"      : "1.0",
+  "id"           : "jid1-gAkXSlruh1Chlg",
+
+  "icon"         : "data/shared/images/icon.png",
+
+  "permissions"  : { "private-browsing"         : "true"
+                   }
+}

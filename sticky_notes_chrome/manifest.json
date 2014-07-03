@@ -1,0 +1,51 @@
+{
+  "manifest_version": 2,
+
+  "name": "StickyNotes",
+  "description": "You can add notes to pages",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon" : "data/shared/images/icon.png",
+    "default_title" : "StickyNotes"
+  },
+
+  "icons": {
+    "128" : "data/shared/images/icon.png"
+    },
+
+  "background": {
+    "scripts": [
+      "data/shared/lib/jquery-1.11.1.js",
+      "lib/shared/lib/underscore.js",
+      "lib/shared/lib/underscore.string.js",
+      "lib/shared/lib/haml.js",
+      "lib/chrome_background_browser_adapter.js",
+      "lib/shared/background.js",
+      "lib/main.js"
+    ],
+    "persistent": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "data/shared/lib/jquery-1.11.1.js",
+        "data/shared/lib/underscore.js",
+        "data/shared/lib/underscore.string.js",
+        "data/shared/lib/backbone.js",
+        "data/chrome_front_browser_adapter.js",
+        "data/shared/js/injected.js"
+      ],
+      "css" : [
+        "data/shared/css/styles.css"
+      ]
+    }
+  ],
+
+  "permissions" : ["storage", "tabs", "http://localhost:3000/*"],
+  "content_security_policy": "script-src 'unsafe-eval'; object-src 'self'",
+  "web_accessible_resources": []
+
+}

@@ -21,7 +21,7 @@
 		<key>Database Quota</key>
 		<real>5242880</real>
 		<key>Global Page</key>
-		<string>safari/global.html</string>
+		<string>lib/main.html</string>
 		<key>Toolbar Items</key>
 		<array>
 			<dict>
@@ -30,7 +30,7 @@
 				<key>Identifier</key>
 				<string>sticky_notes</string>
 				<key>Image</key>
-				<string>shared/images/icon.png</string>
+				<string>data/shared/images/icon.png</string>
 				<key>Label</key>
 				<string>sticky_notes</string>
 				<key>Palette Label</key>
@@ -46,18 +46,17 @@
 		<dict>
 			<key>Start</key>
 			<array>
-				<string>shared/lib/jquery-1.11.1.js</string>
-				<string>safari/safari_browser_adapter.js</string>
-				<string>shared/lib/underscore.js</string>
-				<string>shared/lib/underscore.string.js</string>
-				<string>shared/lib/backbone.js</string>
-				<string>shared/lib/haml.js</string>
-				<string>shared/js/injected.js</string>
+				<string>data/shared/lib/jquery-1.11.1.js</string>
+				<string>data/shared/lib/underscore.js</string>
+				<string>data/shared/lib/underscore.string.js</string>
+				<string>data/shared/lib/backbone.js</string>
+				<string>data/safari_front_browser_adapter.js</string>
+				<string>data/shared/js/injected.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>
 		<array>
-			<string>shared/css/styles.css</string>
+			<string>data/shared/css/styles.css</string>
 		</array>
 	</dict>
 	<key>Description</key>
