@@ -2,6 +2,7 @@
 // The script runs once, every time Firefox is started.
 
 var background_adapter = require("./firefox_background_browser_adapter").background_adapter;
+var background = require("./shared/background").background;
 // !!!! Cannot use Jquery in this page in firefox (logic because there is no DOM)
 // So no $.on(ready)
   background_adapter.setUpScripts();
