@@ -3,6 +3,7 @@
 // (2) handle the messaging between the background process and the injected scripts
 
 //SHOULD HAD AN IF BROWSER = FIREFOX HERE
+console.log("Houhou");
 var background_adapter = require("../firefox_background_browser_adapter").background_adapter;
 
 var haml = require("./lib/haml");
