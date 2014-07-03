@@ -97,11 +97,26 @@ exports.browser = function () {
   //This injects the script in all regular content that gets loaded in the browser
     var _injectScriptInAllUrls = function() {
 
-      function _detachWorker(worker, workerArray) {
-        var index = workerArray.indexOf(worker);
+      //Cleans the worker array when a tab is destroyed
+      function _detachWorker(worker, workersArray) {
+        var index = workersArray.indexOf(worker);
         if(index != -1) {
-          workerArray.splice(index, 1);
+          workersArray.splice(index, 1);
         }
+      }
+
+      //Keeps only the last worker for each tab upon insertion in the array
+      function _insertWorker(worker, workersArray){
+        var n = workersArray.length;
+        var i= 0;
+          while (i<n) {
+          if (workersArray[i].tab.id===worker.tab.id){
+            workersArray.splice(i, 1);
+            n--;
+          }
+          i++;
+        }
+        workersArray.push(worker);
       }
 
       PageModifier.PageMod({
@@ -122,14 +137,15 @@ exports.browser = function () {
         ],
         attachTo: ["existing", "top"],
         onAttach: function(worker) {
-          _workersArray.push(worker);
-          console.log("workeer injected in" + worker.tab.title);
+          _insertWorker(worker,_workersArray);
+          console.log("workeer injected in" + worker.tab.title +" with url " + worker.url);
           // !!!!! Here we have access to the page worker, and can attach it the messaging rules
           // !!!!! Or we can put it in an array to retrieve it later ( But arrays of worker are a pain !)
           _setupMessaging(worker);
 
           //Cleaning the worker array
           worker.on('detach', function () {
+            console.log("Detach call");
             _detachWorker(this, _workersArray);
           });
         }
@@ -141,19 +157,18 @@ exports.browser = function () {
       getWorker : function(tab){
         var res=null;
         var i=0;
+        console.log("We are opening" + tab.url);
         console.log("Workers array of size : "+_workersArray.length);
-        for (var wor in _workersArray){
-          console.log("Worker"+wor.id + "   Title ");
-          if (wor.tab !==undefined){
-            console.log("title:"+wor.tab.title);
-          }
-        }
-        while(res===null && i<_workersArray.length){
-          if(_workersArray[i].tab!==null && _workersArray[i].tab.id===tab.id){
+        while(i<_workersArray.length){
+          console.log(_workersArray[i].tab.url);
+          if(_workersArray[i].tab!==undefined && _workersArray[i].tab.url===tab.url){
+            console.log("Worker found" + i);
+            console.log("Woker status" + _workersArray[i].tab.title + _workersArray[i].tab.id);
             res=_workersArray[i];
           }
           i++;
         }
+        console.log("Res"+res.tab.url);
         return res;
       },
       setupAll : function(){
