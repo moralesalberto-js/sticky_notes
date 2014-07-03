@@ -31,7 +31,7 @@ var background = function () {
     // this function gets the html from the haml template
     // and whatever variables need to be filled in the template
     var _getHtmlForView = function () {
-      var _templateUrl = background_adapter.getLocalUrlFor("shared/templates/sticky_pad.html.haml");
+      var _templateUrl = background_adapter.getLocalUrlFor("data/shared/templates/sticky_pad.html.haml");
       var _template = haml.compileHaml( { sourceUrl: _templateUrl } );
 
       // get the note saved in local storage
