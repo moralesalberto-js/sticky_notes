@@ -4,16 +4,9 @@
 var browser = function () {
   // this is the var that will hold the function the extension registered
   // as the function to listen for injected scripts
-  var _injectedMessagesListenerFunction;
   var _backgroundCommandsListenerFunction;
   var _backgroundMessagesListenerFunction;
 
-  // we receive the event in Chrome way
-  // we translate it to the two variables in the shared interface
-  // _function(message_name, message_data)
-  var _injectedRespondToMessages = function(theMessageEvent) {
-    _injectedMessagesListenerFunction(theMessageEvent.name, theMessageEvent.data);
-  };
 
   // this receives the command (click of toolbar) by Safari
   // sends it translated to the signature of the generic response to command
@@ -55,11 +48,6 @@ var browser = function () {
     // send a message to a specific tab
     sendMessageToTab: function(tab, message, data) {
       chrome.tabs.sendMessage(tab.id, {name: message, data: data});
-    },
-
-    // send a message from injected script to background js
-    sendMessageToBackground: function(message, data) {
-      chrome.runtime.sendMessage({name: message, data: data});
     },
 
     // the adapter listener for messages

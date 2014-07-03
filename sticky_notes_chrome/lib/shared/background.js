@@ -6,7 +6,7 @@ var browser = require("../firefox_browser_adapter").browser;
 
 var haml = require("./lib/haml");
 
-exports.background = function () {
+background = function () {
 
   // This is the object that represents the stickyPad in the backround process
   var _stickyPad = function () {
@@ -100,5 +100,7 @@ exports.background = function () {
   return self;
 
 }.call();
+
+exports.background=background;
 
 
