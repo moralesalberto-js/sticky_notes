@@ -109,18 +109,19 @@ var browser = function () {
     };
 
     //Keeps only the last worker for each tab upon insertion in the array
+    //BUG : When you go Back you loose the worker this way !!!
     var _insertWorker = function(worker, workersArray){
       var n = workersArray.length;
       var i= 0;
         while (i<n) {
-        if (workersArray[i].tab.id===worker.tab.id){
+        if (workersArray[i].tab.url===worker.tab.url){
           workersArray.splice(i, 1);
           n--;
         }
         i++;
       }
       workersArray.push(worker);
-      };
+    };
 
     //This injects the script in all regular content that gets loaded in the browser
     var _injectScriptInAllUrls = function() {
