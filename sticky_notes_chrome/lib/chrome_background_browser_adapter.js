@@ -1,7 +1,7 @@
 // This is the adapater object that will wrap all the safari specific calls
 // Use the same interface for the other browsers
 
-var browser = function () {
+var background_adapter = function () {
   // this is the var that will hold the function the extension registered
   // as the function to listen for injected scripts
   var _backgroundCommandsListenerFunction;
@@ -26,7 +26,7 @@ var browser = function () {
   // PUBLIC API
   // if you change any of these functions, you need to visit the implementation for all
   // browsers and add your changes there as well
-  var self = {
+  var self_ = {
 
     // function to retun an array of all the currently open tabs
 
@@ -95,7 +95,7 @@ var browser = function () {
     }
   };
 
-  return self;
+  return self_;
 
 }.call();
 

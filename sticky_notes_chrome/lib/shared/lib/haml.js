@@ -8,10 +8,10 @@
 
 
 (function() {
-  //THIS IS NECESSARY TO MAKE OUR SOURCEURL TEMPLATE LOADING WORK
-  var _ = require("./underscore");
-  _.str = require("./underscore.string");
-  _.mixin(_.str.exports());
+  // THIS IS NECESSARY IN FIREFOX TO MAKE OUR SOURCEURL TEMPLATE LOADING WORK
+  // var _ = require("./underscore");
+  // _.str = require("./underscore.string");
+  // _.mixin(_.str.exports());
   var Buffer, CodeGenerator, CoffeeCodeGenerator, HamlRuntime, JsCodeGenerator, ProductionJsCodeGenerator, Tokeniser, filters, haml, root, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -332,31 +332,31 @@
 
         // This is because we cannot load jquery in firefox background
         // That we modify this part of the haml file
-        var Request = require("sdk/request").Request;
-        var templateRequest = Request({
-          url: options.templateUrl,
-          onComplete: function (response) {
-            if (response.status===200){
-              console.log("SUCCESS");
-              console.log(response.text);
-              successFn(response.text);
-            }
-            else{
-              console.log("FAILED");
-              throw "Failed to fetch haml template at URL " + options.templateUrl;
-            }
-          }
-        });
-        // jQuery.ajax({
+        // var Request = require("sdk/request").Request;
+        // var templateRequest = Request({
         //   url: options.templateUrl,
-        //   success: successFn,
-        //   error: errorFn,
-        //   dataType: 'text',
-        //   async: false,
-        //   beforeSend: function(xhr) {
-        //     return xhr.withCredentials = true;
+        //   onComplete: function (response) {
+        //     if (response.status===200){
+        //       console.log("SUCCESS");
+        //       console.log(response.text);
+        //       successFn(response.text);
+        //     }
+        //     else{
+        //       console.log("FAILED");
+        //       throw "Failed to fetch haml template at URL " + options.templateUrl;
+        //     }
         //   }
         // });
+        jQuery.ajax({
+          url: options.templateUrl,
+          success: successFn,
+          error: errorFn,
+          dataType: 'text',
+          async: false,
+          beforeSend: function(xhr) {
+            return xhr.withCredentials = true;
+          }
+        });
       }
     }
 

@@ -6,24 +6,23 @@
   "version": "1.0",
 
   "browser_action": {
-    "default_icon" : "shared/images/icon.png",
+    "default_icon" : "data/shared/images/icon.png",
     "default_title" : "StickyNotes"
   },
 
   "icons": {
-    "128" : "shared/images/icon.png"
+    "128" : "data/shared/images/icon.png"
     },
 
   "background": {
     "scripts": [
-      "shared/lib/jquery-1.11.1.js",
-      "shared/lib/underscore.js",
-      "shared/lib/underscore.string.js",
-      "shared/lib/backbone.js",
-      "shared/lib/haml.js",
-      "chrome/chrome_browser_adapter.js",
-      "shared/js/background.js",
-      "chrome/global.js"
+      "data/shared/lib/jquery-1.11.1.js",
+      "lib/shared/lib/underscore.js",
+      "lib/shared/lib/underscore.string.js",
+      "lib/shared/lib/haml.js",
+      "lib/chrome_background_browser_adapter.js",
+      "lib/shared/background.js",
+      "lib/main.js"
     ],
     "persistent": true
   },
@@ -32,16 +31,15 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": [
-        "shared/lib/jquery-1.11.1.js",
-        "shared/lib/underscore.js",
-        "shared/lib/underscore.string.js",
-        "shared/lib/backbone.js",
-        "shared/lib/haml.js",
-        "chrome/chrome_browser_adapter.js",
-        "shared/js/injected.js"
+        "data/shared/lib/jquery-1.11.1.js",
+        "data/shared/lib/underscore.js",
+        "data/shared/lib/underscore.string.js",
+        "data/shared/lib/backbone.js",
+        "data/chrome_front_browser_adapter.js",
+        "data/shared/js/injected.js"
       ],
       "css" : [
-        "shared/css/styles.css"
+        "data/shared/css/styles.css"
       ]
     }
   ],
