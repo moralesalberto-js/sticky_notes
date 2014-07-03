@@ -18,7 +18,6 @@ var browser = function () {
   // this receives the command (click of toolbar) by Safari
   // sends it translated to the signature of the generic response to command
   // _function(command_name)
-// !!!!!!! Perhaps optional command Data ?
   var _backgroundRespondToCommands = function(theCommandEvent) {
     _backgroundCommandsListenerFunction(theCommandEvent.name);
   };
@@ -39,30 +38,23 @@ var browser = function () {
     // function to retun an array of all the currently open tabs
 
 // !!!!!! Callback in chrome
-    getAllTabs: function () {
-      var _allTabs = [];
-      for(var i = 0; i < safari.application.browserWindows.length; i++) {
-        var currentWindow = safari.application.browserWindows[i];
-        for(var j=0; j < currentWindow.tabs.length; j++) {
-          var tab = currentWindow.tabs[j];
-          _allTabs.push(tab);
-        }
-      }
-      return _allTabs;
-      // return chrome.tabs.query
+  //Callback function([tabs])
+    getAllTabs: function (callback) {
+      chrome.tabs.query({},callback);
     },
 
-    // !!!!!! Callback in chrome
-    getActiveTab: function () {
-      //return chrome.tabs.query({active: true, lastFocusedWindow: true},function(tabs){
-
-      //});
+// !!!!!! Callback in chrome
+    //callback : function(tab)
+    getActiveTab: function (callback) {
+      chrome.tabs.query({lastFocusedWindow : true, active: true},function(tabs){
+        console.log(tabs);
+        callback(tabs[0]);
+      });
     },
 
     // send a message to a specific tab
     sendMessageToTab: function(tab, message, data) {
       chrome.tabs.sendMessage(tab.id, {name: message, data: data});
-      chrome.runtime.sendMessage({name: message, data: data});
     },
 
     // send a message from injected script to background js

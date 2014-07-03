@@ -9,20 +9,23 @@ var background = function () {
 
     // send a message to all the windows and tabs to close the sticky notepad
     var _hideInAllTabs = function () {
-      var _tabs = browser.getAllTabs();
-      for(var i = 0; i < _tabs.length; i++) {
-        var _tab = _tabs[i];
-        browser.sendMessageToTab(_tab, 'hideStickyPad', 'hideStickyPad');
-      }
+      browser.getAllTabs(function(_tabs){
+        for(var i = 0; i < _tabs.length; i++) {
+          var _tab = _tabs[i];
+          browser.sendMessageToTab(_tab, 'hideStickyPad', 'hideStickyPad');
+        }
+      });
     };
 
     // send a message to show the sticky pad with the html for the view
     var _showInActiveTab = function () {
-      var _tab = browser.getActiveTab();
       var _data = { html: _getHtmlForView() };
       // we send a message to the injected script with the html
       // to paint the view
-      browser.sendMessageToTab(_tab, 'showStickyPad', _data);
+      browser.getActiveTab(function(_tab){
+        console.log("GET ACTIVE TAB" +_tab + _tab.id);
+        browser.sendMessageToTab(_tab, 'showStickyPad', _data);
+      });
     };
 
 
