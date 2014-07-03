@@ -81,6 +81,9 @@ var background = function () {
     setupListeners : function () {
       _setupCommandsListener();
       _setupMessagesListener();
+    },
+    showStickyPad : function() {
+      _stickyPad.show();
     }
   };
 

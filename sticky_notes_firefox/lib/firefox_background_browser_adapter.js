@@ -16,7 +16,7 @@ var {ActionButton} = require('sdk/ui/button/action');
 var ExtensionSelf = require('sdk/self');
 var ss = require("sdk/simple-storage");
 
-var browser = function () {
+var background_adapter = function () {
 
   // this is the var that will hold the function the extension registered
   // as the function to listen for injected scripts
@@ -95,7 +95,7 @@ var browser = function () {
         //Here are the rules declarations
         //!!!!!! WE WANT THEM TO BE IN SHARED
         if(message_name === 'saveNoteContent') {
-          browser.saveToLocalStorage({key: 'note_content', value: message_data.content});
+          background_adapter.saveToLocalStorage({key: 'note_content', value: message_data.content});
         }
       });
     };
@@ -109,7 +109,7 @@ var browser = function () {
     };
 
     //Keeps only the last worker for each tab upon insertion in the array
-    //BUG : When you go Back you loose the worker this way !!!
+    // !!!! BUG : When you go Back you loose the worker this way !!!
     var _insertWorker = function(worker, workersArray){
       var n = workersArray.length;
       var i= 0;
@@ -136,7 +136,7 @@ var browser = function () {
           ExtensionSelf.data.url("shared/lib/underscore.string.js"),
           ExtensionSelf.data.url("shared/lib/backbone.js"),
           ExtensionSelf.data.url("shared/lib/haml.js"),
-          ExtensionSelf.data.url("firefox_browser_adapter.js"),
+          ExtensionSelf.data.url("firefox_front_browser_adapter.js"),
           ExtensionSelf.data.url("shared/js/injected.js")
         ],
         contentStyleFile: ExtensionSelf.data.url("shared/css/styles.css"),
@@ -195,69 +195,29 @@ var browser = function () {
     },
 
     // function to retun an array of all the currently open tabs
-// !!!!!! Callback in chrome
-// ?????? Different levels of Tab object in firefox API This is High level
-    getAllTabs: function () {
+    // callback = function([tabs])
+    getAllTabs: function (callback) {
       var _allTabs = require("sdk/tabs");
       return _allTabs;
     },
 
-// !!!!!! Callback in chrome
-// ?????? Different levels of Tab object in firefox API This is High level
-    getActiveTab: function () {
+    // callback = function(tab)
+    getActiveTab: function (callback) {
       var _allTabs = require("sdk/tabs");
       return _allTabs.activeTab;
     },
 
     // send a message to a specific tab
-// ?????? Not same way in firefox, send message to a worker
-// ?????? Need of another function
     sendMessageToTab: function(tab, message, data) {
       tabWorker = _scriptsAdapter.getWorker(tab);
       tabWorker.port.emit("tab",{name:message, data: data});
     },
 
-    // send a message from injected script to background js
-// ?????? Not same way in firefox, send message to a worker
-// But this side of communication is ok
-    sendMessageToBackground: function(message, data) {
-      self.port.emit("background",{name:message, data:data});
-    },
-
-    // the adapter listener for messages
-    // (This function is called once by page)
-    // functiontoCall(message_name, message_data)
-// ?????? Trick to bypass the atomic way of firefox
-
-    // addInjectedMessagesSingleListenerFirefox: function (message, functionToCall){
-    //   self.port.on("tab",functionToCall);
-    // },
-    // addInjectedMessagesListener: function(hash_message_functions){
-    //   for (var message_functions in hash_message_functions){
-    //     addInjectedMessagesSingleListenerFirefox(messages_functions.message, messages_functions.functionToCall);
-    //   }
-    // },
-    addInjectedMessagesListener: function(functionToCall) {
-      _injectedMessagesListenerFunction = functionToCall;
-      self.port.on("tab",_injectedRespondToMessages);
-    },
-
     // assign the command passed to our variable to call later
     // register the command listener
     // functionToCall (message_name, message_data)
-// !!!!!! Not same distinction in chrome, check global.js
-// ?????? Not same distinction in firefox
-// Can be done at only one time in firefox when scripts are set up, and
-// only in a more atomic way
+    //Not useful
 
-    // addBackgroundCommandsSingleListenerFirefox: function(message, functionToCall){
-    //   self.port.on(message,functionToCall);
-    // },
-    // addBackgroundCommandsListener: function(hash_commands_functions) {
-    //   for (var commands_functions in hash_commands_functions){
-    //     addInjectedMessagesSingleListenerFirefox(commands_functions.message, commands_functions.functionToCall);
-    //   }
-    // },
     addBackgroundCommandsListener: function(functionToCall) {
       _backgroundCommandsListenerFunction = functionToCall;
       self.port.on("command",_backgroundRespondToCommands);
@@ -273,17 +233,16 @@ var browser = function () {
 
     // This is the URL to access files that are in the extension directory
     // It is used to access the haml templates for example.
+    // NOT ACCESSIBLE FROM CONTENT SCRIPT IN FIREFOX
     getLocalUrlFor: function(relative_path) {
       return ExtensionSelf.data.url(relative_path);
-      // return chrome.extension.getURL(relative_path);
     },
 
     // LOCAL STORAGE
     // local storage works with simple key, value stores
     // For this exercise we are only saving a single note
     // We can add pagination later on to have multiple notes
-// !!!!!!! The specific and better chrome storage is Asynchronous
-// ??????? firefox storage uses an API
+    // !!!!! ONLY FROM BACKGROUND FIREFOX ss is an api required at the top
     saveToLocalStorage: function(data) {
       eval("ss.storage."+data.key+"= data.value");
       // localStorage[data.key] = data.value;
@@ -298,5 +257,5 @@ var browser = function () {
 
 }.call();
 
-exports.browser=browser;
+exports.background_adapter=background_adapter;
 
